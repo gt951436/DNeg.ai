@@ -1,16 +1,13 @@
 # Part 2 — Thought Exercise: Predicting Concrete Defects
-
-*One page. No code. Technical only.*
-
 ## What can be built and why
 
 With three projects, 90–150 captioned photos (defect type only), and mix
-design documents, you can build a **defect classification model** — given a
+design documents, you can build a **defect classification model** - given a
 photo of a defect, identify what type it is (crack, spalling, delamination,
 etc.). A CNN or Vision-Language model fine-tuned on labelled images would
 be straightforward and genuinely useful for QA inspection speed.
 
-You can also build a **mix design ↔ defect type correlation analysis** —
+You can also build a **mix design <--> defect type correlation analysis** -
 a statistical summary showing which mix parameters co-occur with which
 defect types across the three projects. With three data points this is
 descriptive, not predictive, but it gives the client a concrete artefact

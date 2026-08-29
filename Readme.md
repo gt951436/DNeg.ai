@@ -107,6 +107,52 @@ Generative AI is powerful, but it should never have the autonomy to decide wheth
                +-------------------------+
 ```
 
+---
+
+## 🚀 Getting Started & Local Setup
+
+### Prerequisites
+- **Python**: Version 3.10 or higher is required.
+- **Gemini API Key**: (Optional but recommended) Required to enable the full LLM-assisted classification. If not provided, DNeg.ai automatically falls back to rules-only mode.
+
+### Step-by-Step Local Setup
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/gt951436/DNeg.ai.git
+   cd DNeg.ai
+   ```
+
+2. **Create and Activate a Virtual Environment**
+   Using a virtual environment prevents packaging conflicts with other projects.
+   ```powershell
+   # Windows (PowerShell)
+   python -m venv venv
+   .\venv\Scripts\activate
+
+   # macOS/Linux (Bash)
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install Dependencies**
+   Pip install the required pinned dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Configure Environment Variables**
+   Copy the template environment file:
+   ```bash
+   cp .env.example .env
+   ```
+   Open the newly created `.env` file and input your API key:
+   ```env
+   GEMINI_API_KEY=AQ.Ab8RN6JOxxxxUbWQ9JvfFHhC_gyTV3cCxYDm2PKbzexxxxxxxxx
+   ```
+
+---
+
 ### Key Design Decisions
 
 1. **No Future Leakage (`accounting.py`)**: The core invariant of the replay engine is strict temporal isolation. When evaluating an invoice on `Day D`, the agent can *only* see invoices issued on or before `Day D` and payments received on or before `Day D`.
@@ -132,50 +178,27 @@ Generative AI is powerful, but it should never have the autonomy to decide wheth
 
 ## 🧪 Complete Step-by-Step Testing Flow
 
-Follow these steps to set up the environment, run the safety checks, and execute the 18-month simulation.
+Follow these steps to run the safety checks, execute the 18-month simulation, and verify output logs.
 
-### 1. Set up the Environment
-Create and activate a Python virtual environment to keep dependencies isolated:
-```powershell
-# Windows
-python -m venv venv
-.\venv\Scripts\activate
-
-# Mac/Linux
-python3 -m venv venv
-source venv/bin/activate
-```
-Install the required dependencies:
-```powershell
-pip install -r requirements.txt
-```
-
-### 2. Configure the API Key
-To enable the LLM email classification, copy the environment template and add your Gemini API key.
-```powershell
-cp .env.example .env
-```
-Open `.env` and set your key: `GEMINI_API_KEY=your_actual_key_here`
-
-### 3. Run the Unit Tests (Safety Checks)
-The project includes 48 unit tests that rigorously test the temporal boundaries (future leakage) and the policy engine's freeze states.
+### 1. Run the Unit Tests (Safety Checks)
+Verify the core accounting logic and policy constraints:
 ```powershell
 python -m pytest tests/ -v
 ```
 *All 48 tests should pass in under a second.*
 
-### 4. Run the Replay Simulation
-Execute the main application. The system will classify the emails, run the 18-month simulation day-by-day, and generate the risk report.
+### 2. Run the Replay Simulation
+Execute the main application. This will classify the emails (using the Gemini API key in `.env`), run the 18-month simulation day-by-day, and generate the risk report.
 ```powershell
 python main.py
 ```
-*(Note: If you do not have an internet connection or an API key, you can run `python main.py --no-llm`. The system will fall back to rules-only classification for the emails).*
+*(Note: If you do not have an internet connection or an API key, run `python main.py --no-llm` to fall back to rules-only mode).*
 
-### 5. Inspect the Outputs
+### 3. Inspect the Outputs
 Once the run is complete, inspect the generated artifacts in the `output/` directory:
 
-- **`output/replay.jsonl`**: A log of exactly 1,388 actions the agent took. Each JSON line represents a specific day and includes the exact email subject, body, recipients, and the reasoning for the action.
-- **`output/risk_report.json`**: A ledger snapshot as of August 26, 2026. It categorizes the 44 remaining open invoices into risk tiers based on customer history and current state.
+- **`output/replay.jsonl`**: Contains exactly 1,388 actions. Each JSON line details a single daily evaluation, email body, recipient tier, and reason.
+- **`output/risk_report.json`**: An explainable ledger risk analysis of the remaining 44 open invoices.
 
 ---
 
