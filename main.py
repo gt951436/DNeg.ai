@@ -1,5 +1,5 @@
 """
-Collections Agent(DNeg.ai) - single entry point.
+DNeg.ai (Delta Negative.ai) — single entry point.
 
 Usage:
     python main.py [--no-llm] [--start YYYY-MM-DD] [--end YYYY-MM-DD]
@@ -42,7 +42,7 @@ logger = logging.getLogger("main")
 
 
 def _parse_args():
-    p = argparse.ArgumentParser(description="Collections Agent — dry-run replay")
+    p = argparse.ArgumentParser(description="DNeg.ai — dry-run replay")
     p.add_argument("--no-llm", action="store_true", help="Disable LLM classification")
     p.add_argument("--start", type=str, default=None, help="Replay start date (YYYY-MM-DD)")
     p.add_argument("--end", type=str, default=None, help="Replay end date (YYYY-MM-DD)")
@@ -172,7 +172,7 @@ def main() -> None:
     # ── Summary ────────────────────────────────────────────────────────────────
     summary = risk_output["summary"]
     print("\n" + "=" * 60)
-    print("  Collections Agent — Run Complete")
+    print("  DNeg.ai (Delta Negative.ai) — Run Complete")
     print("=" * 60)
     print(f"  Replay log:     {replay_path}")
     print(f"  Risk report:    {risk_path}")

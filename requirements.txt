@@ -1,4 +1,4 @@
-# Collections Agent — pinned dependencies
+# DNeg.ai (Delta Negative.ai) — pinned dependencies
 # Install: pip install -r requirements.txt
 
 # Core

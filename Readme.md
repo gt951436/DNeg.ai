@@ -1,6 +1,6 @@
-# Collections Agent
+# DNeg.ai (Delta Negative.ai)
 
-A rule-based, config-driven accounts receivable collections agent with dry-run replay simulation, explainable risk reporting, and an LLM-assisted hybrid email classification engine.
+DNeg.ai is a rule-based, config-driven accounts receivable collections agent designed to systematically reduce the delta of remaining dues/invoices down to zero. It features a dry-run replay simulation, explainable risk reporting, and an LLM-assisted hybrid email classification engine.
 
 ---
 

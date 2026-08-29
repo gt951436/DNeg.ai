@@ -1,5 +1,5 @@
 """
-Data models for the Collections Agent.
+Data models for DNeg.ai (Delta Negative.ai).
 Pure dataclasses / Pydantic-style — no external dependencies beyond stdlib.
 """
 

@@ -1,5 +1,5 @@
 # =============================================================================
-# Collections Agent — Escalation Policy
+# DNeg.ai (Delta Negative.ai) — Escalation Policy
 # All thresholds (days) are relative to the invoice due date.
 # Negative = before due, positive = after due.
 # =============================================================================
