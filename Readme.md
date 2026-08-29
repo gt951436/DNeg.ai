@@ -148,7 +148,7 @@ Generative AI is powerful, but it should never have the autonomy to decide wheth
    ```
    Open the newly created `.env` file and input your API key:
    ```env
-   GEMINI_API_KEY=XQ.XXXXN6JOxxxxUbWQ9JvfFHhC_gyTV3cCxYDm2PKbzexxxxxxxxx
+   GEMINI_API_KEY=your_gemini_api_key_here
    ```
 
 ---
