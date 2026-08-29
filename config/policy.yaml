@@ -1,0 +1,115 @@
+# =============================================================================
+# Collections Agent — Escalation Policy
+# All thresholds (days) are relative to the invoice due date.
+# Negative = before due, positive = after due.
+# =============================================================================
+
+# ── Pre-due reminders ────────────────────────────────────────────────────────
+pre_due:
+  enabled: true
+  days_before_due: 7        # Send a friendly heads-up to AP contact
+  recipient: ap_contact
+  auto_send: true           # Agent may send without human review
+
+# ── Post-due escalation ladder ───────────────────────────────────────────────
+# Each stage triggers when days_overdue >= threshold.
+# 'recipients' is ordered: first entry is the TO, rest are CC'd.
+# 'auto_send: false' means the message is composed but held for human sign-off.
+escalation_ladder:
+  - stage: 1
+    days_overdue: 1
+    label: first_reminder
+    recipients: [ap_contact]
+    cc_internal: []
+    auto_send: true
+
+  - stage: 2
+    days_overdue: 7
+    label: second_reminder
+    recipients: [ap_contact]
+    cc_internal: [collections]
+    auto_send: true
+
+  - stage: 3
+    days_overdue: 14
+    label: controller_escalation
+    recipients: [controller]
+    cc_internal: [collections]
+    auto_send: false          # Controller contact requires human approval
+
+  - stage: 4
+    days_overdue: 21
+    label: internal_sales_alert
+    recipients: []            # Internal only - no customer email
+    cc_internal: [sales_owner, collections]
+    auto_send: true           # Internal alert, no customer impact
+
+  - stage: 5
+    days_overdue: 30
+    label: ceo_escalation
+    recipients: [ceo]
+    cc_internal: [sales_owner, collections]
+    auto_send: false          # CEO contact always requires human approval
+
+  - stage: 6
+    days_overdue: 45
+    label: owner_escalation
+    recipients: [owner]
+    cc_internal: [sales_owner, collections]
+    auto_send: false          # Owner contact always requires human approval
+
+# ── Reminder cadence ─────────────────────────────────────────────────────────
+# Once at a given stage, how many days before re-sending at the same level?
+reminder_cadence_days: 7
+
+# ── Small-balance suppression ─────────────────────────────────────────────────
+# Do NOT escalate beyond stage 2 for invoices below this amount.
+# (Protects the Ardley & Sons type relationship - small amounts, long tenure.)
+small_balance_ceiling: 1000.00
+small_balance_max_stage: 2
+
+# ── Promise-to-pay hold ──────────────────────────────────────────────────────
+# After a PROMISE_TO_PAY reply, pause automated reminders for this many days.
+promise_hold_days: 14
+
+# ── OOO hold ─────────────────────────────────────────────────────────────────
+# After an OOO reply, pause automated reminders for this many days.
+ooo_hold_days: 5
+
+# ── Dispute / Legal freeze ────────────────────────────────────────────────────
+# When a DISPUTE or LEGAL reply is received, freeze all automated customer
+# contact.  Only a human can unfreeze.
+dispute_freeze: true
+legal_freeze: true
+
+# ── Payment-claimed hold ──────────────────────────────────────────────────────
+# When customer claims payment was already made, hold reminders for
+# verification_hold_days and flag for internal check.
+payment_claimed_hold_days: 5
+
+# ── Complaint handling ────────────────────────────────────────────────────────
+# When customer expresses strong frustration / complaint, auto-hold and
+# notify sales_owner.  No further automated messages until resolved.
+complaint_freeze: true
+
+# ── Contact update handling ───────────────────────────────────────────────────
+# When a CONTACT_CHANGE reply is received, flag for human to update CRM.
+# Continue sending to old contact until human confirms the update.
+contact_change_hold: true
+
+# ── Risk scoring thresholds (for open invoices risk report) ──────────────────
+risk:
+  high_days_overdue: 14        # Already overdue by this many days --> HIGH
+  medium_days_overdue: 0       # Due today or past due --> MEDIUM
+  chronic_late_threshold: 0.5  # >50% of historical invoices paid late --> chronic flag
+  large_balance_threshold: 50000.00  # Absolute exposure above this --> weight up
+
+# ── LLM model hierarchy ───────────────────────────────────────────────────────
+llm:
+  models:
+    - "gemini-3.6-flash"
+    - "gemini-3.5-flash"
+    - "gemini-3.5-flash-lite"
+    - "gemini-3.1-flash-lite"
+  temperature: 0.0             # Deterministic classification
+  max_retries: 2
